@@ -15,7 +15,7 @@ Mehmet Yozgatli 9 24
 Olcan Adin 3 23
 Nicolas Anelka 10 32
 Mert Nobre 8 19
------------------------------------
+----
 Fabio Luciano 3 41
 Servet Cetin 7 20
 Onder Turaci 8 32
