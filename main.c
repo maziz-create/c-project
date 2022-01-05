@@ -21,10 +21,28 @@ bool oyuncununKaydiVarMi(struct oyuncu gelenOyuncu, char gelenOyuncuAdi[20]) {
 }
 
 void oyuncuEkle(struct oyuncu oyuncular[20], struct oyuncu eklenecekOyuncu, int kacinciOyuncu) {
-  printf("gelen isim => %s \n", eklenecekOyuncu.isim);
-  printf("gelen soyisim => %s \n", eklenecekOyuncu.soyIsim);
-  printf("gelen hatali pas => %d \n", eklenecekOyuncu.hataliPas);
-  printf("gelen isabetli pas => %d \n", eklenecekOyuncu.isabetliPas);
+  /*
+    DEBUG CODES
+    
+    printf("gelen isim => %s \n", eklenecekOyuncu.isim);
+    printf("gelen soyisim => %s \n", eklenecekOyuncu.soyIsim);
+    printf("gelen hatali pas => %d \n", eklenecekOyuncu.hataliPas);
+    printf("gelen isabetli pas => %d \n", eklenecekOyuncu.isabetliPas);
+    printf("bu oyuncu kacinci oyuncu? => %d\n", kacinciOyuncu);
+
+    printf("yeni eklenen isim => %s \n", eklenecekOyuncu.isim);
+    printf("yeni eklenen soyisim => %s \n", eklenecekOyuncu.soyIsim);
+    printf("yeni eklenen hatali pas => %d \n", eklenecekOyuncu.hataliPas);
+    printf("yeni eklenen isabetli pas => %d \n", eklenecekOyuncu.isabetliPas);
+  */
+  
+  strcpy(oyuncular[kacinciOyuncu].isim, eklenecekOyuncu.isim);
+
+  strcpy(oyuncular[kacinciOyuncu].soyIsim, eklenecekOyuncu.soyIsim);
+
+  oyuncular[kacinciOyuncu].isabetliPas = eklenecekOyuncu.isabetliPas;
+
+  oyuncular[kacinciOyuncu].hataliPas = eklenecekOyuncu.hataliPas;
 }
 
 int main()
@@ -43,6 +61,11 @@ int main()
   do {
     karakter = fgets(satir, 100, paslar);
     ptr = strtok(satir, neyeGore);
+
+    if (strcmp(ptr, "----") == 0) {
+      printf("şu an ---- yakalandı! => %s", ptr);
+      continue;
+    }
 
     kaydiVarMi = oyuncununKaydiVarMi(oyuncular[kacinciOyuncu], ptr);
 
@@ -63,8 +86,7 @@ int main()
       ozellikSayaci++;
 	  }
 
-    oyuncuEkle(oyuncular, temp, kacinciOyuncu);
-    printf("\n\n\n");
+    if (!kaydiVarMi) oyuncuEkle(oyuncular, temp, kacinciOyuncu);
 
     ozellikSayaci = 0;
     kacinciOyuncu++;

@@ -1,7 +1,7 @@
 Can Arat 3 15
 Deniz Baris 2 19
 Umit Ozat 9 25
-Mahmut Hanefi Erdogdu 30 22
+Mahmut Erdogdu 30 22
 Serkan Balci 3 43
 Kerim Zengin 12 20
 Stephen Appiah 5 12
@@ -9,7 +9,7 @@ Mehmet Aurelio 3 21
 Selcuk Sahin 16 21
 Kemal Aslan 9 30
 Gurkan Gursoy 25 13
-Alex 3 38
+Alex Souza 3 38
 Tuncay Sanli 1 46
 Mehmet Yozgatli 9 24
 Olcan Adin 3 23
