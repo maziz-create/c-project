@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 struct oyuncu  
-{  
+{
   char isim[25];
   char soyIsim[25];
   int hataliPas;
@@ -12,85 +12,102 @@ struct oyuncu
   int isabetliPas;
 };
 
-bool oyuncununKaydiVarMi(struct oyuncu gelenOyuncu, char gelenOyuncuAdi[20]) {
-  if (strcmp(gelenOyuncu.isim, gelenOyuncuAdi) == 0)
-  {
-    return true; 
+bool oyuncununKaydiVarMi(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
+  for(int i = 0; i < 20; i++) {
+    if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0){
+      return true; 
+    }
   }
   return false;
 }
 
-void oyuncuEkle(struct oyuncu oyuncular[20], struct oyuncu eklenecekOyuncu, int kacinciOyuncu) {
-  /*
-    DEBUG CODES
-    
-    printf("gelen isim => %s \n", eklenecekOyuncu.isim);
-    printf("gelen soyisim => %s \n", eklenecekOyuncu.soyIsim);
-    printf("gelen hatali pas => %d \n", eklenecekOyuncu.hataliPas);
-    printf("gelen isabetli pas => %d \n", eklenecekOyuncu.isabetliPas);
-    printf("bu oyuncu kacinci oyuncu? => %d\n", kacinciOyuncu);
-
-    printf("yeni eklenen isim => %s \n", eklenecekOyuncu.isim);
-    printf("yeni eklenen soyisim => %s \n", eklenecekOyuncu.soyIsim);
-    printf("yeni eklenen hatali pas => %d \n", eklenecekOyuncu.hataliPas);
-    printf("yeni eklenen isabetli pas => %d \n", eklenecekOyuncu.isabetliPas);
-  */
-  
-  strcpy(oyuncular[kacinciOyuncu].isim, eklenecekOyuncu.isim);
-
-  strcpy(oyuncular[kacinciOyuncu].soyIsim, eklenecekOyuncu.soyIsim);
-
-  oyuncular[kacinciOyuncu].isabetliPas = eklenecekOyuncu.isabetliPas;
-
-  oyuncular[kacinciOyuncu].hataliPas = eklenecekOyuncu.hataliPas;
+int oyuncununIndeksiniBul(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
+  for(int i = 0; i < 20; i++) {
+    if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0) {
+      return i;
+    }
+  }
+  return -1;
 }
 
-int main()
-{
+void ekle(struct oyuncu oyuncular[20], char *karakter, char satir[100], FILE *paslar, char *ptr, char neyeGore[], bool kaydiVarMi, int kacinciOyuncu, int oyuncununIndeksi, int ozellikSayaci) {
+    do {
+    karakter = fgets(satir, 100, paslar); // satir
+    ptr = strtok(satir, neyeGore); // isim
+
+    if (strcmp(ptr, "--\n") == 0) {
+      continue;
+    }
+
+    kaydiVarMi = oyuncununKaydiVarMi(oyuncular, ptr);
+    if (kaydiVarMi) {
+      oyuncununIndeksi = oyuncununIndeksiniBul(oyuncular, ptr);
+    }
+   
+    if (!kaydiVarMi) {
+      oyuncular[kacinciOyuncu].oynananMacSayisi = 1;
+      while(ptr != NULL) {
+        if (ozellikSayaci == 0) {
+          strcpy(oyuncular[kacinciOyuncu].isim, ptr);
+        }else if (ozellikSayaci == 1) {
+          strcpy(oyuncular[kacinciOyuncu].soyIsim, ptr);
+        }else if (ozellikSayaci == 2) {
+          oyuncular[kacinciOyuncu].hataliPas = atoi(ptr);
+        }else if (ozellikSayaci == 3) {
+          oyuncular[kacinciOyuncu].isabetliPas = atoi(ptr);
+        }
+        ptr = strtok(NULL, neyeGore);
+        ozellikSayaci++;
+      }
+	  } else if (kaydiVarMi) {
+      kacinciOyuncu--;
+      oyuncular[oyuncununIndeksi].oynananMacSayisi++;
+      while(ptr != NULL) {
+        if (ozellikSayaci == 2) {
+          int eklenecekDeger = atoi(ptr);
+          oyuncular[oyuncununIndeksi].hataliPas += eklenecekDeger;
+        }else if (ozellikSayaci == 3) {
+          int eklenecekDeger = atoi(ptr);
+          oyuncular[oyuncununIndeksi].isabetliPas += eklenecekDeger;
+        }
+        ptr = strtok(NULL, neyeGore);
+        ozellikSayaci++;
+      }
+    }
+    kacinciOyuncu++;
+    ozellikSayaci = 0;
+  } while (karakter != NULL);
+}
+
+void yazdir(struct oyuncu oyuncular[20]) {
+  FILE *toplam;
+  toplam = fopen("toplam.txt","w");
+  for (int i = 0; i < 20; i++) {
+    fprintf(toplam,"%s ",oyuncular[i].isim);
+    fprintf(toplam,"%s ",oyuncular[i].soyIsim);
+    fprintf(toplam,"%d ",oyuncular[i].oynananMacSayisi);
+    fprintf(toplam,"%d ",oyuncular[i].hataliPas);
+    fprintf(toplam,"%d\n",oyuncular[i].isabetliPas);
+  }
+  fclose(toplam);
+}
+
+int main(){
   struct oyuncu oyuncular[20];
-  struct oyuncu temp;
 
   char satir[100], *karakter;
   char neyeGore[] = " ", *ptr;
   FILE *paslar = fopen("paslar.txt", "r");
 
   bool kaydiVarMi = false;
-  int kacinciOyuncu = 0;
+  int kacinciOyuncu = 0, oyuncununIndeksi = 0;
   int ozellikSayaci = 0;
- 
-  do {
-    karakter = fgets(satir, 100, paslar);
-    ptr = strtok(satir, neyeGore);
 
-    if (strcmp(ptr, "----") == 0) {
-      printf("şu an ---- yakalandı! => %s", ptr);
-      continue;
-    }
+  ekle(oyuncular, karakter, satir, paslar, ptr, neyeGore, kaydiVarMi, kacinciOyuncu, oyuncununIndeksi, ozellikSayaci);
 
-    kaydiVarMi = oyuncununKaydiVarMi(oyuncular[kacinciOyuncu], ptr);
+  fclose(paslar);
 
-    while(ptr != NULL)
-	  {
-      if (!kaydiVarMi) {
-        if (ozellikSayaci == 0) {
-          strcpy(temp.isim , ptr);
-        }else if (ozellikSayaci == 1){
-          strcpy(temp.soyIsim , ptr);
-        }else if (ozellikSayaci == 2){
-          temp.hataliPas = atoi(ptr);
-        }else{
-          temp.isabetliPas = atoi(ptr);
-        }
-      }
-		  ptr = strtok(NULL, neyeGore);
-      ozellikSayaci++;
-	  }
-
-    if (!kaydiVarMi) oyuncuEkle(oyuncular, temp, kacinciOyuncu);
-
-    ozellikSayaci = 0;
-    kacinciOyuncu++;
-  } while (karakter != NULL);
+  yazdir(oyuncular);
 
 	return 0;
 }
