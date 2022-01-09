@@ -1,17 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h> //bu olmadan bool değişkenler kullanılamıyor.
+#include <stdbool.h>
 #include <stdlib.h>
-
-//fopen: dosyayı istenilen modda açar.
-//fgets: dosya okuma işlemi
-//fprintf: dosyaya bir şeyler yazar.
-//fclose: dosyayı kapatır.
-//atoi: string ifadeyi integer'a çevirir.
-//strtok: satırdaki ifadeleri string olarak okur.
-//strtok(null): satır içindeki diğer kelimeye geçer.
-//strcmp: string1 == string2 işlemini yapar.
-//strcpy: string1 = string2 işlemini yapar.
+int i;
 
 struct oyuncu
 {
@@ -24,7 +15,6 @@ struct oyuncu
 
 //oyuncunun kaydı varsa true, yoksa false döner.
 bool oyuncununKaydiVarMi(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
-  int i = 0;
   for(i = 0; i < 20; i++) {
     if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0){
       return true;
@@ -35,7 +25,6 @@ bool oyuncununKaydiVarMi(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
 
 //kaydı olan oyuncunun kaçıncı indekste yer aldığını döndürür
 int oyuncununIndeksiniBul(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
-  int i = 0;
   for(i = 0; i < 20; i++) {
     if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0) {
       return i;
@@ -98,7 +87,6 @@ void ekle(struct oyuncu oyuncular[20], char *karakter, char satir[100], FILE *pa
 void yazdir(struct oyuncu oyuncular[20]) {
   FILE *toplam;
   toplam = fopen("toplam.txt","w");
-  int i = 0;
   for(i = 0; i < 20; i++) {
     fprintf(toplam,"%s ",oyuncular[i].isim);
     fprintf(toplam,"%s ",oyuncular[i].soyIsim);
@@ -106,6 +94,7 @@ void yazdir(struct oyuncu oyuncular[20]) {
     fprintf(toplam,"%d ",oyuncular[i].hataliPas);
     fprintf(toplam,"%d\n",oyuncular[i].isabetliPas);
   }
+  printf("bitti!!");
   fclose(toplam);
 }
 
