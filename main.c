@@ -99,7 +99,7 @@ void yazdir(struct oyuncu oyuncular[20]) {
   FILE *toplam;
   toplam = fopen("toplam.txt","w");
   int i = 0;
-  for (int i = 0; i < 20; i++) {
+  for(i = 0; i < 20; i++) {
     fprintf(toplam,"%s ",oyuncular[i].isim);
     fprintf(toplam,"%s ",oyuncular[i].soyIsim);
     fprintf(toplam,"%d ",oyuncular[i].oynananMacSayisi);
