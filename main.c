@@ -1,26 +1,38 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+#include <stdbool.h> //bu olmadan bool değişkenler kullanılamıyor.
 #include <stdlib.h>
 
-struct oyuncu  
+//fopen: dosyayı istenilen modda açar.
+//fgets: dosya okuma işlemi
+//fprintf: dosyaya bir şeyler yazar.
+//fclose: dosyayı kapatır.
+//atoi: string ifadeyi integer'a çevirir.
+//strtok: satırdaki ifadeleri string olarak okur.
+//strtok(null): satır içindeki diğer kelimeye geçer.
+//strcmp: string1 == string2 işlemini yapar.
+//strcpy: string1 = string2 işlemini yapar.
+
+struct oyuncu
 {
   char isim[25];
   char soyIsim[25];
+  int oynananMacSayisi;
   int hataliPas;
-  int oynananMacSayisi;  
   int isabetliPas;
 };
 
+//oyuncunun kaydı varsa true, yoksa false döner.
 bool oyuncununKaydiVarMi(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
   for(int i = 0; i < 20; i++) {
     if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0){
-      return true; 
+      return true;
     }
   }
   return false;
 }
 
+//kaydı olan oyuncunun kaçıncı indekste yer aldığını döndürür
 int oyuncununIndeksiniBul(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) {
   for(int i = 0; i < 20; i++) {
     if (strcmp(oyuncular[i].isim, gelenOyuncuAdi) == 0) {
@@ -30,47 +42,49 @@ int oyuncununIndeksiniBul(struct oyuncu oyuncular[20], char gelenOyuncuAdi[20]) 
   return -1;
 }
 
-void ekle(struct oyuncu oyuncular[20], char *karakter, char satir[100], FILE *paslar, char *ptr, char neyeGore[], bool kaydiVarMi, int kacinciOyuncu, int oyuncununIndeksi, int ozellikSayaci) {
+//satır satır okuyacak, toplam.txt'in içeriğini üretecek.
+void ekle(struct oyuncu oyuncular[20], char *karakter, char satir[100], FILE *paslar, char *okunanDeger, char neyeGore[], bool kaydiVarMi, int kacinciOyuncu, int oyuncununIndeksi, int ozellikSayaci) {
     do {
-    karakter = fgets(satir, 100, paslar); // satir
-    ptr = strtok(satir, neyeGore); // isim
+    karakter = fgets(satir, 100, paslar); // satırdeki tam veriler
+    okunanDeger = strtok(satir, neyeGore); // isim
 
-    if (strcmp(ptr, "--\n") == 0) {
+    if (strcmp(okunanDeger, "--\n") == 0) {
       continue;
     }
 
-    kaydiVarMi = oyuncununKaydiVarMi(oyuncular, ptr);
+    kaydiVarMi = oyuncununKaydiVarMi(oyuncular, okunanDeger);
+
     if (kaydiVarMi) {
-      oyuncununIndeksi = oyuncununIndeksiniBul(oyuncular, ptr);
+      oyuncununIndeksi = oyuncununIndeksiniBul(oyuncular, okunanDeger);
     }
    
     if (!kaydiVarMi) {
       oyuncular[kacinciOyuncu].oynananMacSayisi = 1;
-      while(ptr != NULL) {
+      while(okunanDeger != NULL) {
         if (ozellikSayaci == 0) {
-          strcpy(oyuncular[kacinciOyuncu].isim, ptr);
+          strcpy(oyuncular[kacinciOyuncu].isim, okunanDeger);
         }else if (ozellikSayaci == 1) {
-          strcpy(oyuncular[kacinciOyuncu].soyIsim, ptr);
+          strcpy(oyuncular[kacinciOyuncu].soyIsim, okunanDeger);
         }else if (ozellikSayaci == 2) {
-          oyuncular[kacinciOyuncu].hataliPas = atoi(ptr);
+          oyuncular[kacinciOyuncu].hataliPas = atoi(okunanDeger);
         }else if (ozellikSayaci == 3) {
-          oyuncular[kacinciOyuncu].isabetliPas = atoi(ptr);
+          oyuncular[kacinciOyuncu].isabetliPas = atoi(okunanDeger);
         }
-        ptr = strtok(NULL, neyeGore);
+        okunanDeger = strtok(NULL, neyeGore); // bir sonraki kelimeye geç
         ozellikSayaci++;
       }
 	  } else if (kaydiVarMi) {
       kacinciOyuncu--;
       oyuncular[oyuncununIndeksi].oynananMacSayisi++;
-      while(ptr != NULL) {
+      while(okunanDeger != NULL) {
         if (ozellikSayaci == 2) {
-          int eklenecekDeger = atoi(ptr);
+          int eklenecekDeger = atoi(okunanDeger);
           oyuncular[oyuncununIndeksi].hataliPas += eklenecekDeger;
         }else if (ozellikSayaci == 3) {
-          int eklenecekDeger = atoi(ptr);
+          int eklenecekDeger = atoi(okunanDeger);
           oyuncular[oyuncununIndeksi].isabetliPas += eklenecekDeger;
         }
-        ptr = strtok(NULL, neyeGore);
+        okunanDeger = strtok(NULL, neyeGore); // bir sonraki kelimeye geç
         ozellikSayaci++;
       }
     }
@@ -96,14 +110,14 @@ int main(){
   struct oyuncu oyuncular[20];
 
   char satir[100], *karakter;
-  char neyeGore[] = " ", *ptr;
+  char neyeGore[] = " ", *okunanDeger;
   FILE *paslar = fopen("paslar.txt", "r");
 
   bool kaydiVarMi = false;
   int kacinciOyuncu = 0, oyuncununIndeksi = 0;
   int ozellikSayaci = 0;
 
-  ekle(oyuncular, karakter, satir, paslar, ptr, neyeGore, kaydiVarMi, kacinciOyuncu, oyuncununIndeksi, ozellikSayaci);
+  ekle(oyuncular, karakter, satir, paslar, okunanDeger, neyeGore, kaydiVarMi, kacinciOyuncu, oyuncununIndeksi, ozellikSayaci);
 
   fclose(paslar);
 
