@@ -1,5 +1,2 @@
-# c-proje-odevi
-Algoritma ve Programlamaya Giriş dersi için üretmiş olduğum proje.
-
-## amacı nedir?
-paslar.txt içerisinde bir takımın birden fazla maçına dair oyuncuların hatalı ve isabetli pas verileri yer almaktadır. 'main.c' dosyası çalıştırıldığı taktirde 'toplam.txt' isminde bir dosya üretilir ve oyuncuların toplam kaç maç oynadıkları, toplam hatalı ve toplam isabetli pas sayıları yazdırılır.
+# c-project
+"paslar.txt" contains players' incorrect and accurate pass data for more than one match of a team. If the 'main.c' file is run, a file named 'total.txt' is produced and the total number of matches played by the players and the total number of incorrect and total accurate passes are printed.
